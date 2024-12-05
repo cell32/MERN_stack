@@ -67,6 +67,7 @@ const DashboardLayout = ({ isDarkThemeEnabled }) => {
     </DashboardContext.Provider>
   );
 };
+
 // eslint-disable-next-line react-refresh/only-export-components
 export const useDashboardContext = () => useContext(DashboardContext);
 export default DashboardLayout;
