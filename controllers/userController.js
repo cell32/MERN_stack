@@ -19,13 +19,12 @@ export const getApplicationStatus = async (req, res) => {
 };
 
 export const updateUser = async (req, res, next) => {
-  // console.log(req.file); // this is only to see the img information in the console
   const newUser = { ...req.body };
   delete newUser.password;
 
   if (req.file) {
     const file = formatImage(req.file);
-    const response = await cloudinary.v2.uploader.upload(req.file.path);
+    const response = await cloudinary.v2.uploader.upload(file);
     // await fs.unlink(req.file.path); // not using this storage anymore after modifying multer middleware
     newUser.avatar = response.secure_url;
     newUser.avatarPublicId = response.public_id;
