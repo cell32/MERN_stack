@@ -1,16 +1,16 @@
-// with the use of the express-assync-errors, you don't need
-// the try/catch block to hanlde async errors in the job controller
 import "express-async-errors";
 import * as dotenv from "dotenv";
-
 dotenv.config();
-
 import express from "express";
 const app = express();
 import morgan from "morgan";
 import { nanoid } from "nanoid";
 import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
+
+// security
+import helmet from "helmet";
+import mongoSanitize from "express-mongo-sanitize";
 
 // routers
 import jobRouter from "./routes/jobRouter.js";
@@ -43,10 +43,8 @@ if (process.env.NODE_ENV === "development") {
 // app.use(morgan("dev"));
 app.use(cookieParser());
 app.use(express.json());
-
-app.get("/", (req, res) => {
-  res.send("Hello World");
-});
+app.use(helmet());
+app.use(mongoSanitize());
 
 // home page route
 app.post("/", (req, res) => {
@@ -62,13 +60,6 @@ app.get("*", (req, res) => {
   res.sendFile(path.resolve(__dirname, "./client/dist", "index.html"));
 });
 
-// dummy route to test
-app.get("/api/v1/test", (req, res) => {
-  res.json({ msg: "test route" });
-});
-
-// this middleware will take care of the "request"
-//which does not found any match in our server
 app.use("*", (req, res) => {
   res.status(404).json({ msg: "not found" });
 });
